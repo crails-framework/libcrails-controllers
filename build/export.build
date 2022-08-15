@@ -1,0 +1,6 @@
+$out_root/
+{
+  include libcrails-controllers/
+}
+
+export $out_root/libcrails-controllers/$import.target
