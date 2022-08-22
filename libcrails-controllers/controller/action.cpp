@@ -24,7 +24,7 @@ string ActionController::get_action_name() const     { return params["controller
 
 void ActionController::redirect_to(const string& uri)
 {
-  response.set_status_code(HttpStatus::temporary_redirect);
+  response.set_status_code(HttpStatus::see_other);
   response.set_header(HttpHeader::location, uri);
   close();
 }
