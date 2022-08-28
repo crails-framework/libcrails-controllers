@@ -2,7 +2,7 @@
 name: libcrails-controllers
 version: 2.0.0
 summary: controllers for the crails framework
-license: BSD-C3
+license: BSD-3-Clause
 description-file: README.md
 url: https://github.com/crails-framework/libcrails-controllers.git
 email: michael@unetresgrossebite.com
