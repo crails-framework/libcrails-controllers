@@ -1,6 +1,6 @@
 #include "csrf.hpp"
 #include <crails/params.hpp>
-#include <crails/utils/string.hpp>
+#include <crails/utils/random_string.hpp>
 
 using namespace std;
 using namespace Crails;
