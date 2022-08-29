@@ -1,4 +1,5 @@
 import intf_libs += libcrails%lib{crails}
+import intf_libs += libcrails-random%lib{crails-random}
 
 lib{crails-controllers}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs
 
@@ -11,7 +12,7 @@ cxx.poptions =+ "-I$out_root" "-I$src_root"
 
 lib{crails-controllers}:
 {
-  cxx.export.poptions = "-I$out_root" "-I$src_root"
+  cxx.export.poptions = "-I$out_root/libcrails-controllers/" "-I$src_root/libcrails-controllers/"
   cxx.export.libs = $intf_libs
 }
 
