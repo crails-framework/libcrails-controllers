@@ -25,7 +25,8 @@ namespace Crails
     ActionController(Context&);
     virtual ~ActionController();
 
-    void redirect_to(const std::string& uri);
+    void redirect_to(Crails::HttpStatus status, const std::string& uri);
+    void redirect_to(const std::string& uri) { redirect_to(HttpStatus::see_other, uri); }
     void respond_with(Crails::HttpStatus);
     virtual void initialize() {}
     virtual void finalize() {}

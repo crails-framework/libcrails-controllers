@@ -22,9 +22,9 @@ ActionController::~ActionController()
 string ActionController::get_controller_name() const { return params["controller-data"]["name"].as<string>(); }
 string ActionController::get_action_name() const     { return params["controller-data"]["action"].as<string>(); }
 
-void ActionController::redirect_to(const string& uri)
+void ActionController::redirect_to(HttpStatus status, const string& uri)
 {
-  response.set_status_code(HttpStatus::see_other);
+  response.set_status_code(status);
   response.set_header(HttpHeader::location, uri);
   close();
 }
