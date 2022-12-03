@@ -31,9 +31,21 @@ RenderController::RenderController(Context& context) : CsrfController(context)
   }
 }
 
+string RenderController::get_accept_header() const
+{
+  auto accept_header = request.find(HttpHeader::accept);
+
+  string accept = accept_header != request.end()
+    ? string(accept_header->value())
+    : string();
+  return accept_header != request.end()
+    ? string(accept_header->value())
+    : string();
+}
+
 void RenderController::render(const std::string& view)
 {
-  Renderer::render(view, params.as_data(), response, vars);
+  Renderer::render(view, get_accept_header(), response, vars);
   close();
 }
 
@@ -44,7 +56,7 @@ void RenderController::render(const std::string& view, SharedVars vars)
     if (vars.find(var.first) == vars.end())
       vars.emplace(var.first, var.second);
   }
-  Renderer::render(view, params.as_data(), response, vars);
+  Renderer::render(view, get_accept_header(), response, vars);
   close();
 }
 

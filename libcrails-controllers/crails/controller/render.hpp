@@ -14,15 +14,16 @@ namespace Crails
 
     RenderController(Context&);
 
-    void       render(const std::string& view);
-    void       render(const std::string& view, SharedVars);
-    void       render(RenderType type, Data value);
-    void       render(RenderType type, const std::string& value);
+    void        render(const std::string& view);
+    void        render(const std::string& view, SharedVars);
+    void        render(RenderType type, Data value);
+    void        render(RenderType type, const std::string& value);
+    std::string get_accept_header() const;
 
-    SharedVars vars;
-    DataTree   flash;
+    SharedVars  vars;
+    DataTree    flash;
   private:
-    void       set_content_type(RenderType);
+    void        set_content_type(RenderType);
   };
 }
 
