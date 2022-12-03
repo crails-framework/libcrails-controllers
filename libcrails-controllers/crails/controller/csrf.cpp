@@ -26,7 +26,7 @@ void CsrfController::protect_from_forgery()
   if (params["method"].as<string>() != "GET" && !(check_csrf_token()))
     throw ExceptionCSRF();
   // Generate a new CSRF token for this request
-  session["csrf_token"] = generate_random_string(16);
+  session["csrf-token"] = generate_random_string(16);
 }
 
 bool CsrfController::check_csrf_token()// const
@@ -35,5 +35,5 @@ bool CsrfController::check_csrf_token()// const
 
   if (!(csrf_token.exists()))
     return false; // CSRF Token wasn't specified in the request
-  return csrf_token.as<string>() == session["csrf_token"].as<string>();
+  return csrf_token.as<string>() == session["csrf-token"].as<string>();
 }
