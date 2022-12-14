@@ -22,6 +22,7 @@ RenderController::RenderController(Context& context) : CsrfController(context)
   vars["controller"] = this;
   vars["params"]     = &params;
   vars["flash"]      = &flash;
+  vars["session"]    = &session;
 
   // Initialize flash variable and reset corresponding cookie
   if (session["flash"].exists())
