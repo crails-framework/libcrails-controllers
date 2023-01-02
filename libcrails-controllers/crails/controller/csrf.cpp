@@ -22,11 +22,14 @@ void CsrfController::initialize()
 
 void CsrfController::protect_from_forgery()
 {
+  auto verb = request.method();
+
   // If request contains a body (ie: not get), check for the CSRF token
-  if (params["method"].as<string>() != "GET" && !(check_csrf_token()))
+  if (verb != Crails::HttpVerb::get && !(check_csrf_token()))
     throw ExceptionCSRF();
-  // Generate a new CSRF token for this request
-  session["csrf-token"] = generate_random_string(16);
+  // If no CSRF token has been set already, or the request consumed the token, generate a new CSRF token
+  if (verb != Crails::HttpVerb::get || !session["csrf-token"].exists())
+    session["csrf-token"] = generate_random_string(16);
 }
 
 bool CsrfController::check_csrf_token()// const
