@@ -1,5 +1,6 @@
 #include "action.hpp"
 #include <crails/context.hpp>
+#include <crails/logger.hpp>
 
 using namespace std;
 using namespace Crails;
@@ -15,6 +16,7 @@ ActionController::ActionController(Context& context) :
 
 ActionController::~ActionController()
 {
+  logger << Logger::Debug << "ActionController::~ActionController: closing request on deletion: " << close_on_deletion << Logger::endl;
   if (close_on_deletion)
     close();
 }
@@ -39,6 +41,7 @@ void ActionController::close()
 {
   if (callback)
   {
+    logger << Logger::Debug << "ActionController::close()" << Logger::endl;
     params["response-time"]["controller"] = timer.GetElapsedSeconds();
     callback();
     callback = std::function<void()>();
