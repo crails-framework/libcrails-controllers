@@ -52,11 +52,7 @@ void RenderController::render(const std::string& view)
 
 void RenderController::render(const std::string& view, SharedVars vars)
 {
-  for (const auto& var : this->vars)
-  {
-    if (vars.find(var.first) == vars.end())
-      vars.emplace(var.first, var.second);
-  }
+  vars = merge(vars, this->vars);
   Renderer::render(view, get_accept_header(), response, vars);
   close();
 }
