@@ -6,6 +6,7 @@
 # include <crails/http.hpp>
 # include <memory>
 # include <functional>
+# include <thread>
 
 namespace Crails
 {
@@ -31,6 +32,8 @@ namespace Crails
     virtual void initialize() {}
     virtual void finalize() {}
     void close();
+
+    std::thread start_thread(std::function<void()> invokable);
 
     Params&            params;
     Data               session;

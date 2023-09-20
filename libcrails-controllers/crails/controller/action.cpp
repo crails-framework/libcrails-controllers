@@ -47,3 +47,15 @@ void ActionController::close()
     callback = std::function<void()>();
   }
 }
+
+std::thread ActionController::start_thread(function<void()> invokable)
+{
+  shared_ptr<Context> context_ref = context;
+  thread t([invokable, context_ref]()
+  {
+    context_ref->protect(invokable);
+  });
+
+  t.detach();
+  return move(t);
+}
