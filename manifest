@@ -8,4 +8,4 @@ url: https://github.com/crails-framework/libcrails-controllers.git
 email: michael@unetresgrossebite.com
 depends: * build2 >= 0.15.0
 depends: * bpkg >= 0.15.0
-depends: { libcrails libcrails-random } ^2.0.0
+depends: { libcrails libcrails-random libcrails-semantics } ^2.0.0
