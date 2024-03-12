@@ -4,11 +4,12 @@
 # include "controller/action.hpp"
 # include "controller/basic_authentication.hpp"
 # include "controller/render.hpp"
+# include "controller/flash.hpp"
 # include "controller/csrf.hpp"
 
 namespace Crails
 {
-  typedef RenderController Controller;
+  typedef FlashController Controller;
 }
 
 #endif

@@ -21,15 +21,7 @@ RenderController::RenderController(Context& context) : CsrfController(context)
   // Set the class attributes accessible to the views
   vars["controller"] = this;
   vars["params"]     = &params;
-  vars["flash"]      = &flash;
   vars["session"]    = &session;
-
-  // Initialize flash variable and reset corresponding cookie
-  if (session["flash"].exists())
-  {
-    flash.as_data().merge(session["flash"]);
-    session["flash"].destroy();
-  }
 }
 
 string RenderController::get_accept_header() const

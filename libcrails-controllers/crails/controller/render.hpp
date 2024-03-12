@@ -21,7 +21,6 @@ namespace Crails
     std::string get_accept_header() const;
 
     SharedVars  vars;
-    DataTree    flash;
   private:
     void        set_content_type(RenderType);
   };
