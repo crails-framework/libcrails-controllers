@@ -16,6 +16,7 @@ namespace Crails
 
     void        render(const std::string& view);
     void        render(const std::string& view, SharedVars);
+    void        render_accepting(const std::string& accept, const std::string& view, SharedVars);
     void        render(RenderType type, Data value);
     void        render(RenderType type, const std::string& value);
     std::string get_accept_header() const;

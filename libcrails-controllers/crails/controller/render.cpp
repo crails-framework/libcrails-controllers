@@ -3,6 +3,7 @@
 #include <crails/params.hpp>
 #include <crails/renderer.hpp>
 #include <crails/http_response.hpp>
+#include <crails/logger.hpp>
 
 using namespace std;
 using namespace Crails;
@@ -31,22 +32,27 @@ string RenderController::get_accept_header() const
   string accept = accept_header != request.end()
     ? string(accept_header->value())
     : string();
+  logger << Logger::Debug << "RenderController: accept_header: " << accept << Logger::endl;
   return accept_header != request.end()
     ? string(accept_header->value())
     : string();
 }
 
+void RenderController::render_accepting(const std::string& accept, const std::string& view, SharedVars vars)
+{
+  vars = merge(vars, this->vars);
+  Renderer::render(view, accept, response, vars);
+  close();
+}
+
 void RenderController::render(const std::string& view)
 {
-  Renderer::render(view, get_accept_header(), response, vars);
-  close();
+  render(view, SharedVars{});
 }
 
 void RenderController::render(const std::string& view, SharedVars vars)
 {
-  vars = merge(vars, this->vars);
-  Renderer::render(view, get_accept_header(), response, vars);
-  close();
+  render_accepting(get_accept_header(), view, vars);
 }
 
 void RenderController::render(RenderType type, const string& value)
