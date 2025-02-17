@@ -1,4 +1,5 @@
 import intf_libs += libcrails%lib{crails}
+import intf_libs += libcrails-any%lib{crails-any}
 import intf_libs += libcrails-random%lib{crails-random}
 import intf_libs += libcrails-semantics%lib{crails-semantics}
 

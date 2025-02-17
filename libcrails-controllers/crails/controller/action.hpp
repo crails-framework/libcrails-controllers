@@ -4,6 +4,7 @@
 # include <crails/utils/timer.hpp>
 # include <crails/datatree.hpp>
 # include <crails/http.hpp>
+# include <crails/shared_vars.hpp>
 # include <memory>
 # include <functional>
 # include <thread>
@@ -22,6 +23,7 @@ namespace Crails
   public:
     std::string get_controller_name() const;
     std::string get_action_name() const;
+    const SharedVars& get_vars() const { return vars; }
   protected:
     ActionController(Context&);
     virtual ~ActionController();
