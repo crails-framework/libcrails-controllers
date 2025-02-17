@@ -36,6 +36,7 @@ namespace Crails
     std::thread start_thread(std::function<void()> invokable);
 
     Params&            params;
+    SharedVars&        vars;
     Data               session;
     const HttpRequest& request;
     BuildingResponse&  response;

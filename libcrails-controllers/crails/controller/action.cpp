@@ -7,6 +7,7 @@ using namespace Crails;
 
 ActionController::ActionController(Context& context) :
   params(context.params),
+  vars(context.vars),
   session(params.get_session()),
   request(context.connection->get_request()),
   response(context.response),

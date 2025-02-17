@@ -21,7 +21,6 @@ namespace Crails
     void        render(RenderType type, const std::string& value);
     std::string get_accept_header() const;
 
-    SharedVars  vars;
   private:
     void        set_content_type(RenderType);
   };
