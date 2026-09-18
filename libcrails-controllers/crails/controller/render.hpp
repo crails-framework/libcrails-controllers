@@ -10,7 +10,7 @@ namespace Crails
   class RenderController : public CsrfController
   {
   public:
-    enum RenderType { TEXT, HTML, XML, JSON, JSONP, RAW };
+    enum RenderType { TEXT, HTML, XML, JSON, JSONP, FORM, RAW };
 
     RenderController(Context&);
 

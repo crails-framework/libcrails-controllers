@@ -8,12 +8,15 @@
 using namespace std;
 using namespace Crails;
 
-const map<RenderController::RenderType, string> content_types{
+namespace Crails { void params2cgi(std::ostream&, Data, bool first = false); }
+
+static const map<RenderController::RenderType, string_view> content_types{
   {RenderController::TEXT,  "text/plain"},
   {RenderController::HTML,  "text/html"},
   {RenderController::XML,   "text/xml"},
   {RenderController::JSON,  "application/json"},
   {RenderController::JSONP, "application/javascript"},
+  {RenderController::FORM,  "application/x-www-form-urlencoded"},
   {RenderController::RAW,   "application/octet-stream"}
 };
 
@@ -64,22 +67,27 @@ void RenderController::render(RenderType type, const string& value)
 
 void RenderController::render(RenderType type, Data value)
 {
-  string       content_type;
-  stringstream body;
+  string        content_type;
+  ostringstream body;
 
   switch (type)
   {
     case TEXT:
+    case RAW:
+    case HTML:
       body << value.defaults_to<string>("");
       break ;
     case JSON:
       value.output(body);
       break ;
+    case FORM:
+      params2cgi(body, value);
+      break ;
     case XML:
       body << value.to_xml();
       break ;
     default:
-      throw boost_ext::invalid_argument("Crails::RenderController::render(RenderType,Data) only supports TEXT, XML and JSON");
+      throw boost_ext::invalid_argument("Crails::RenderController::render(RenderType,Data) only supports TEXT, FORM, RAW, HTML, XML and JSON");
   }
   set_content_type(type);
   response.set_body(body.str().c_str(), body.str().length());
@@ -88,5 +96,5 @@ void RenderController::render(RenderType type, Data value)
 
 void RenderController::set_content_type(RenderType type)
 {
-  response.set_header(HttpHeader::content_type, content_types.at(type));
+  response.set_header(HttpHeader::content_type, string(content_types.at(type)));
 }
