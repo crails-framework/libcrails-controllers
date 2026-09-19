@@ -37,14 +37,14 @@ namespace Crails
 
     std::thread start_thread(std::function<void()> invokable);
 
-    Params&            params;
-    SharedVars&        vars;
-    Data               session;
-    const HttpRequest& request;
-    BuildingResponse&  response;
+    Params&                  params;
+    SharedVars&              vars;
+    Data                     session;
+    const HttpRequest&       request;
+    BuildingResponse&        response;
+    std::shared_ptr<Context> context;
   private:
     Utils::Timer             timer;
-    std::shared_ptr<Context> context;
     std::function<void()>    callback;
     bool                     close_on_deletion = false;
   };
