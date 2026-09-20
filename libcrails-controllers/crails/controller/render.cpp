@@ -58,10 +58,17 @@ void RenderController::render(const std::string& view, SharedVars vars)
   render_accepting(get_accept_header(), view, vars);
 }
 
-void RenderController::render(RenderType type, const string& value)
+void RenderController::render(RenderType type, const string_view value)
 {
   set_content_type(type);
-  response.set_body(value.c_str(), value.length());
+  response.set_body(value.data(), value.length());
+  close();
+}
+
+void RenderController::render(RenderType type, string&& value)
+{
+  set_content_type(type);
+  response.set_body(value);
   close();
 }
 
