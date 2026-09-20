@@ -68,7 +68,7 @@ void RenderController::render(RenderType type, const string_view value)
 void RenderController::render(RenderType type, string&& value)
 {
   set_content_type(type);
-  response.set_body(value);
+  response.set_body(std::move(value));
   close();
 }
 
