@@ -6,10 +6,11 @@
 # include "controller/render.hpp"
 # include "controller/flash.hpp"
 # include "controller/csrf.hpp"
+# include "controller/coroutine.hpp"
 
 namespace Crails
 {
-  typedef FlashController Controller;
+  typedef CoroutineController Controller;
 }
 
 #endif
