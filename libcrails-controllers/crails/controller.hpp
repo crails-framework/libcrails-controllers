@@ -10,6 +10,7 @@
 
 namespace Crails
 {
+  typedef FlashController     SynchronousController;
   typedef CoroutineController Controller;
 }
 
