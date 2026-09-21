@@ -1,5 +1,6 @@
 #pragma once
 #include "flash.hpp"
+#include <crails/context.hpp>
 #include <boost/asio/co_spawn.hpp>
 
 namespace Crails

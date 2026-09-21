@@ -1,5 +1,4 @@
 #include "coroutine.hpp"
-#include <crails/context.hpp>
 
 using namespace Crails;
 
