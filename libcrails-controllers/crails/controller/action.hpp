@@ -34,6 +34,7 @@ namespace Crails
     virtual void initialize() {}
     virtual void finalize() {}
     void close();
+    bool is_closed() const { return closing; }
 
     std::thread start_thread(std::function<void()> invokable);
 
@@ -46,7 +47,8 @@ namespace Crails
   private:
     Utils::Timer             timer;
     std::function<void()>    callback;
-    bool                     close_on_deletion = false;
+    bool                     closing = false;
+    bool                     should_close_on_deletion = false;
   };
 }
 

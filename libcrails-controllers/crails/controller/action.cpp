@@ -17,9 +17,7 @@ ActionController::ActionController(Context& context) :
 
 ActionController::~ActionController()
 {
-  logger << Logger::Debug << "ActionController::~ActionController: closing request on deletion: " << close_on_deletion << Logger::endl;
-  if (close_on_deletion)
-    close();
+  logger << Logger::Debug << "ActionController::~ActionController: closed: " << closing << Logger::endl;
 }
 
 string ActionController::get_controller_name() const { return params["controller-data"]["name"].as<string>(); }
@@ -40,12 +38,15 @@ void ActionController::respond_with(Crails::HttpStatus code)
 
 void ActionController::close()
 {
-  if (callback)
+  if (callback && !closing)
   {
+    function<void()> closing_callback = std::move(callback);
+
     logger << Logger::Debug << "ActionController::close()" << Logger::endl;
     params["response-time"]["controller"] = timer.GetElapsedSeconds();
-    callback();
     callback = std::function<void()>();
+    closing = true;
+    closing_callback();
   }
 }
 
