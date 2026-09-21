@@ -14,11 +14,11 @@ namespace Crails
   class Params;
   class Context;
   class BuildingResponse;
-  template<typename CONTROLLER> class ActionRoute;
+  template<typename CONTROLLER, bool> class ActionRoute;
 
   class ActionController : public std::enable_shared_from_this<ActionController>
   {
-    template<typename CONTROLLER>
+    template<typename CONTROLLER, bool>
     friend class ActionRoute;
   public:
     std::string get_controller_name() const;

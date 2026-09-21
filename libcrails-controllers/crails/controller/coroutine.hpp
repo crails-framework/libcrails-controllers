@@ -7,7 +7,7 @@ namespace Crails
 {
   class CoroutineController : public FlashController
   {
-    template<typename CONTROLLER>
+    template<typename CONTROLLER, bool>
     friend class ActionRoute;
 
     typedef FlashController Super;

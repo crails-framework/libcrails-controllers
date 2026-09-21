@@ -1,0 +1,3 @@
+import libs += libcrails-controllers%lib{crails-controllers}
+
+exe{driver}: {hxx ixx txx cxx}{**} $libs testscript{**}
