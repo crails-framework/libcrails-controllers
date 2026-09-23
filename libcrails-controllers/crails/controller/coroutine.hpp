@@ -1,5 +1,6 @@
 #pragma once
 #include "flash.hpp"
+#include "coroutine/executor.hpp"
 #include <crails/context.hpp>
 #include <boost/asio/co_spawn.hpp>
 
@@ -12,7 +13,10 @@ namespace Crails
 
     typedef FlashController Super;
   public:
-    using Super::Super;
+    CoroutineController(Context& context) :
+      FlashController(context),
+      coroutine_executor(std::make_shared<CoroutineExecutor>())
+    {}
 
   protected:
     virtual boost::asio::any_io_executor get_io_executor();
@@ -42,5 +46,7 @@ namespace Crails
         }
       );
     }
+
+    std::shared_ptr<CoroutineExecutor> coroutine_executor;
   };
 }

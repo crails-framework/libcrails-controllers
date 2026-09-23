@@ -3,6 +3,7 @@
 #include <boost/asio/steady_timer.hpp>
 #include <boost/asio/use_awaitable.hpp>
 #include <thread>
+#include <iostream>
 #include "../test_support.hpp"
 
 #undef NDEBUG
@@ -28,13 +29,17 @@ struct Tasks : public Crails::CoroutineController
   using Crails::CoroutineController::co_initialize;
   using Crails::CoroutineController::co_finalize;
   using Crails::CoroutineController::get_io_executor;
+  using Crails::CoroutineController::coroutine_executor;
   int counter = 0;
 };
 
 struct OnTheIoContext : public Tasks
 {
   OnTheIoContext(Crails::Context& context) : Tasks(context) {}
-  boost::asio::any_io_executor get_io_executor() override { return Crails::Server::get_io_context().get_executor(); }
+  boost::asio::any_io_executor get_io_executor() override
+  {
+    return Crails::CoroutineBoundExecutor(Crails::Server::get_io_context().get_executor(), coroutine_executor);
+  }
 };
 
 int main()
@@ -138,6 +143,88 @@ int main()
       done = true;
     });
     assert(pump_until([&]() { return done; }));
+  }
+
+  // The coroutine_executor's wrappers run around the moment the task actually runs on the thread:
+  // acquire fires before the task body starts, release fires once it is done, and they stay paired
+  {
+    Fixture fixture;
+    auto    controller = make_shared<Tasks>(*fixture);
+    int     acquired = 0, released = 0;
+    bool    acquired_before_body = false, released_after_body = false, ran = false;
+
+    controller->coroutine_executor->add_wrapper({
+      [&]() { ++acquired; },
+      [&]() { ++released; released_after_body = ran; }
+    });
+    controller->spawn([&]() -> awaitable<void>
+    {
+      acquired_before_body = (acquired == 1 && released == 0);
+      ran = true;
+      co_return;
+    });
+    assert(pump_until([&]() { return released > 0; }));
+    assert(ran && acquired_before_body && released_after_body);
+    assert(acquired == released);
+  }
+
+  // The wrappers fire again every time the task resumes after a suspension point:
+  // acquire/release stay paired across every co_await, not just once for the whole task
+  {
+    Fixture fixture;
+    auto    controller = make_shared<Tasks>(*fixture);
+    std::atomic<int>     acquired = 0;
+    std::atomic<int>     releazed = 0;
+
+    controller->coroutine_executor->add_wrapper({
+      [&]() { ++acquired; cout << "acquired: " << acquired << endl; },
+      [&]() { ++releazed; cout << "released: " << releazed << endl; } });
+    controller->spawn([&]() -> awaitable<void>
+    {
+      cout << "Spawned" << endl;
+      for (int i = 0 ; i < 3 ; ++i)
+      {
+        cout << "Gonna co-await" << endl;
+        co_await pause(1ms);
+        cout << "Woke from co-await" << endl;
+      }
+      cout << "co_return" << endl;
+    });
+    pump_until([&]() { return releazed >= 4 && acquired == releazed; }); // 1 start + 3 resumptions, at least
+    cout << "Release=" << releazed << ", acquired=" << acquired << endl;
+  }
+
+  // The wrappers stay paired even when the task throws: release always runs, exception or not
+  {
+    Fixture fixture;
+    auto    controller = make_shared<Tasks>(*fixture);
+    int     acquired = 0, released = 0;
+
+    controller->coroutine_executor->add_wrapper({ [&]() { ++acquired; }, [&]() { ++released; } });
+    controller->spawn([]() -> awaitable<void> { co_await pause(2ms); throw std::runtime_error("the task failed"); });
+    assert(pump_until([&]() { return fixture.finished(); }));
+    assert(acquired > 0 && acquired == released);
+  }
+
+  // The wrappers fire no matter which target executor get_io_executor() returns
+  {
+    Fixture fixture;
+    auto    controller = make_shared<OnTheIoContext>(*fixture);
+    int     acquired = 0, released = 0;
+    bool    over = false;
+
+    controller->coroutine_executor->add_wrapper({
+      [&]() { ++acquired; cout << "acquired: " << acquired << endl; },
+      [&]() { ++released; cout << "released: " << released << endl; } });
+    controller->spawn([&]() -> awaitable<void>
+    {
+      cout << "About to wait" << endl;
+      co_await pause(2ms);
+      cout << "Done waiting" << endl;
+      over = true;
+    });
+    assert(pump_until([&]() { return over; }));
+    assert(acquired > 0 && released > 0);
   }
 
   // get_io_executor tells where the tasks run, and it can be changed
