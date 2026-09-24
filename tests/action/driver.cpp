@@ -26,7 +26,7 @@ struct Bare : public Crails::ActionController
 
 typedef Crails::ActionRoute<Bare> Route;
 
-int main()
+void driver()
 {
   Crails::environment = Crails::Test;
   Setup setup;
@@ -133,6 +133,11 @@ int main()
     controller.close();
     assert(called == 1);
   }
+}
 
+int main()
+{
+  driver();
+  Crails::Server::cleanup();
   return 0;
 }

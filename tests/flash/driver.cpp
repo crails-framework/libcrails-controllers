@@ -70,6 +70,7 @@ int main()
   setup.reset(); // reset everything for potential further testing
   setup.emplace();
 
+  Crails::Server::cleanup();
   return 0;
 }
 

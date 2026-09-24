@@ -42,7 +42,7 @@ struct OnTheIoContext : public Tasks
   }
 };
 
-int main()
+void driver()
 {
   Crails::environment = Crails::Test;
   Setup setup;
@@ -242,6 +242,11 @@ int main()
     assert(pump_until([&]() { return over; }));
     assert(!on_strand);
   }
+}
 
+int main()
+{
+  driver();
+  Crails::Server::cleanup();
   return 0;
 }
