@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/version.hpp>
 #include <boost/asio/any_io_executor.hpp>
 #include <boost/asio/dispatch.hpp>
 #include <boost/asio/post.hpp>
@@ -116,7 +117,11 @@ class CoroutineBoundExecutor
     template <typename Function>
     void execute(Function&& f) const
     {
+#if BOOST_VERSION >= 108700
+      target_.execute(wrap_function(std::forward<Function>(f)));
+#else
       boost::asio::execution::execute(target_, wrap_function(std::forward<Function>(f)));
+#endif
     }
 
     template <typename Function, typename Alloc>
