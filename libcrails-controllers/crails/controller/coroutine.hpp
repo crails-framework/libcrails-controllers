@@ -3,6 +3,13 @@
 #include "coroutine/executor.hpp"
 #include <crails/context.hpp>
 #include <boost/asio/co_spawn.hpp>
+#include <boost/asio/this_coro.hpp>
+#include <boost/asio/async_result.hpp>
+#include <boost/asio/use_awaitable.hpp>
+#include <boost/asio/post.hpp>
+#include <functional>
+#include <thread>
+#include <utility>
 
 namespace Crails
 {
@@ -44,6 +51,28 @@ namespace Crails
           if (error)
             context->protect([error]() { std::rethrow_exception(error); });
         }
+      );
+    }
+
+    template<typename T>
+    boost::asio::awaitable<T> awaitable_blocking_task(std::function<T()> work)
+    {
+      auto executor = co_await boost::asio::this_coro::executor;
+
+      co_return co_await boost::asio::async_initiate<decltype(boost::asio::use_awaitable), void(T)>(
+        [work = std::move(work), executor](auto handler) mutable
+        {
+          std::thread([work = std::move(work), handler = std::move(handler), executor]() mutable
+          {
+            T result = work();
+
+            boost::asio::post(executor, [handler = std::move(handler), result = std::move(result)]() mutable
+            {
+              std::move(handler)(std::move(result));
+            });
+          }).detach();
+        },
+        boost::asio::use_awaitable
       );
     }
 
