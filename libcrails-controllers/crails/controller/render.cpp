@@ -41,19 +41,19 @@ string RenderController::get_accept_header() const
     : string();
 }
 
-void RenderController::render_accepting(const std::string& accept, const std::string& view, SharedVars vars)
+void RenderController::render_accepting(const std::string_view accept, const std::string_view view, SharedVars vars)
 {
   vars = merge(vars, this->vars);
   Renderer::render(view, accept, response, vars);
   close();
 }
 
-void RenderController::render(const std::string& view)
+void RenderController::render(const std::string_view view)
 {
   render(view, SharedVars{});
 }
 
-void RenderController::render(const std::string& view, SharedVars vars)
+void RenderController::render(const std::string_view view, SharedVars vars)
 {
   render_accepting(get_accept_header(), view, vars);
 }

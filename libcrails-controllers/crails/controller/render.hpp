@@ -14,9 +14,9 @@ namespace Crails
 
     RenderController(Context&);
 
-    void        render(const std::string& view);
-    void        render(const std::string& view, SharedVars);
-    void        render_accepting(const std::string& accept, const std::string& view, SharedVars);
+    void        render(const std::string_view view);
+    void        render(const std::string_view view, SharedVars);
+    void        render_accepting(const std::string_view accept, const std::string_view view, SharedVars);
     void        render(RenderType type, Data value);
     void        render(RenderType type, const std::string_view value);
     void        render(RenderType type, std::string&& value);
