@@ -25,6 +25,12 @@ namespace Crails
       coroutine_executor(std::make_shared<CoroutineExecutor>())
     {}
 
+  virtual ~CoroutineController()
+  {
+    coroutine_executor->on_release();
+    coroutine_executor->clear();
+  }
+
   protected:
     virtual boost::asio::any_io_executor get_io_executor();
     virtual boost::asio::awaitable<void> co_initialize() { co_return ; }

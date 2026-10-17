@@ -38,6 +38,11 @@ namespace Crails
       }
     };
 
+    void clear()
+    {
+      wrappers.clear();
+    }
+
     void add_wrapper(const CoroutineWrapper& value)
     {
       wrappers.push_back(value);
