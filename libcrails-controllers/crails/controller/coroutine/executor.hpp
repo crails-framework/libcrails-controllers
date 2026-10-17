@@ -49,7 +49,6 @@ namespace Crails
       {
         if (wrapper.acquire)
           wrapper.acquire();
-        return ;
       }
     }
 
@@ -59,7 +58,6 @@ namespace Crails
       {
         if (wrapper.release)
           wrapper.release();
-        return ;
       }
     }
 
@@ -67,7 +65,7 @@ namespace Crails
     std::vector<CoroutineWrapper> wrappers;
   };
   
-class CoroutineBoundExecutor
+  class CoroutineBoundExecutor
   {
   public:
     typedef boost::asio::any_io_executor target_executor_type;
