@@ -16,4 +16,5 @@ FlashController::FlashController(Context& context) : Super(context)
 void FlashController::finalize()
 {
   session["flash"].merge(flash);
+  Super::finalize();
 }
